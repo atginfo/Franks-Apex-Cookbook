@@ -1,3 +1,6 @@
+# Salesforce Org Details
+This project will contain all raw metadata related to the resuable solutions. For a more organized view of the solutions, please view the Solutions folder,
+
 # Salesforce DX Project: Next Steps
 
 Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
