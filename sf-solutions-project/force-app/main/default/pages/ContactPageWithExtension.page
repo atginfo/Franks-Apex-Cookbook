@@ -1,0 +1,13 @@
+<!-- We use a custom controller to add additional functionality to the standardController -->
+<apex:page standardController="Account" extensions="MyControllerExtension">
+
+    <!-- We call the greeting method from within the extension class -->
+    <p>{!greeting}</p>
+
+    <!-- Allowing the user to edit their account name and save it with click of a button -->
+    <apex:form >
+        <apex:inputField value="{!account.Name}"/>
+        <apex:commandButton value="Save" action="{!save}"/>
+    </apex:form>
+    
+</apex:page>

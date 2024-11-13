@@ -1,0 +1,17 @@
+<apex:page controller="OpportunityController">
+    <!-- Wrapping our inputs into a form first  -->
+    <apex:form >
+        <apex:pageBlock title="Create Opportunity" tabStyle="Opportunity" id="createOpptyForm">
+            <!-- Creating a button that is bound to the createOpportunity method from controller  -->
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!createOpportunity}" value="Create Opportunity" reRender="createOpptyForm" />
+            </apex:pageBlockButtons>
+            <!-- The values that can be filled in to create an Opportunity  -->
+            <apex:pageBlockSection title="Create new Opportunity" columns="1" collapsible="false">
+                <apex:inputField value="{!newOppty.Name}" />
+                <apex:inputField value="{!newOppty.StageName}" />
+                <apex:inputField value="{!newOppty.CloseDate}" />
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>    
+</apex:page>

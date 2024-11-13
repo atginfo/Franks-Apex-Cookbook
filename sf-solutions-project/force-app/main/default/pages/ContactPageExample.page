@@ -1,0 +1,46 @@
+<!-- standardController can create, edit, save and delete records -->
+<apex:page standardController="Contact">
+    
+    <!-- Making use of the standController 
+    This will display the fields by using dot notation-->
+    <apex:pageBlock title="Contact Page">
+        <apex:pageBlockSection >
+            Name: {!Contact.Name}<br/> 
+            Phone: {!Contact.Phone}<br/> 
+            Email: {!Contact.Email}<br/> 
+            Title: {!Contact.Title}<br/>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+
+    <!-- When we want to edit the fields we wrap it in an apex:form -->
+    <apex:form >
+        <apex:pageBlock title="Edit Contact">
+            <apex:pageBlockSection columns="1">
+                <apex:inputField value="{!Contact.FirstName}"/>
+                <apex:inputField value="{!Contact.LastName}"/>
+                <apex:inputField value="{!Contact.Email}"/>
+                <apex:inputField value="{!Contact.Birthdate}"/>
+            </apex:pageBlockSection>
+            <!-- We bind the Save action to a button so we can save the changes made  -->
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!save}" value="Save"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+
+    <!-- When we want to display multiple records, we iterate using pageBlockTable 
+        and assign that record to the variable named in the var attribute -->
+    <apex:pageBlock title="Contact Record">
+        <apex:pageBlockSection columns="1" title="Contact Summary">
+            <apex:outputField value="{!Contact.Name}"/>
+            <apex:outputField value="{!Contact.Phone}"/>
+            <apex:outputField value="{!Contact.Title}"/>
+        </apex:pageBlockSection>
+        <apex:pageBlockTable value="{!Contact.Cases}" var="caseRecord">
+            <apex:column value="{!caseRecord.CaseNumber}"/>
+            <apex:column value="{!caseRecord.Reason}"/>
+            <apex:column value="{!caseRecord.Origin}"/>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+
+</apex:page>

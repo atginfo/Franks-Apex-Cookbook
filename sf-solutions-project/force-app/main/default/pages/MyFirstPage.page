@@ -1,0 +1,29 @@
+<!-- sidebar and showheader is used here to reflect the look of Salesforce Classic -->
+<apex:page sidebar="true" showHeader="true">
+   
+    <!-- Use of Header Tags to write text -->
+    <h1>Hello World</h1>
+
+    <!-- pageBlock and pageBlockSection. Creates expandable/collapsable sections  -->
+    <apex:pageBlock title="This is the Page Block Title">
+        <apex:pageBlockSection title="A Section Title">
+            I'm three components deep!
+        </apex:pageBlockSection>
+
+        <!-- <b> tag is used to bolden the text -->
+        <apex:pageBlockSection title="A New Section">
+            <b>This is another section in bold!</b>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+
+    <!-- Using <p> tags and expression variables. Remember expression syntax is {!someVariable} -->
+    <p>Here is an example global variable: <i> My name is {!$User.FirstName}</i></p>
+    <p>Here is a an example formula: <i>Today's date is {!TODAY()}</i></p>
+    <p>
+        Here is an example conditional expression:
+        <!-- <i> tag is used to italicize the text, combined with an IF expression, 
+            similar to how ternary expressions are written -->
+        <i>Is today's date before the 15th of the month? Answer: {!IF(DAY(TODAY()) < 15,'Yes!', 'No!')}</i>
+    </p>
+
+</apex:page>

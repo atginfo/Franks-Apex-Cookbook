@@ -1,0 +1,48 @@
+<apex:page controller="RandomDataController">
+    <apex:form >
+        <apex:pageBlock title="Random Line Items">
+            <apex:pageBlockTable value="{!lineItems}" var="item">
+                <apex:column headerValue="Item Name">
+                    <apex:outputText value="{!item.Name}"/>
+                </apex:column>
+                <apex:column headerValue="Quantity">
+                    <apex:outputText value="{!item.Quantity}"/>
+                </apex:column>
+                <apex:column headerValue="Price">
+                    <apex:outputText value="{!item.Price}"/>
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+        
+        <!-- Fixed button container -->
+        <div class="button-container">
+            <apex:commandButton value="Next" />
+            <apex:commandButton value="Cancel"  />
+        </div>
+    </apex:form>
+
+    <style>
+        /* Ensure the container is always visible at the bottom */
+        .button-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white; /* Match the background color of your page */
+            border-top: 1px solid #ddd; /* Optional: add a top border for separation */
+            padding: 10px;
+            text-align: center; /* Center-align buttons horizontally */
+            z-index: 1000; /* Ensure it is above other content */
+        }
+        
+        /* Ensure buttons are spaced and aligned properly */
+        .button-container apex|commandButton {
+            margin: 0 10px;
+        }
+        
+        /* Add bottom padding to the main content to avoid overlap */
+        apex|pageBlock {
+            padding-bottom: 60px; /* Adjust based on the height of the button container */
+        }
+    </style>
+</apex:page>

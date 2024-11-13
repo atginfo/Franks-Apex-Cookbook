@@ -1,0 +1,14 @@
+<template>
+    <lightning-card title="Product Selection">
+        <lightning-layout>
+            <lightning-layout-item size="6" padding="around-small">
+                <template for:each={products} for:item="product">
+                    <div key={product.Id}>
+                        <lightning-input type="checkbox" label={product.Name} checked={product.selected} onchange={handleProductSelection}></lightning-input>
+                    </div>
+                </template>
+            </lightning-layout-item>
+        </lightning-layout>
+        <lightning-button label="Add Selected Products" onclick={addSelectedProducts}></lightning-button>
+    </lightning-card>
+</template>

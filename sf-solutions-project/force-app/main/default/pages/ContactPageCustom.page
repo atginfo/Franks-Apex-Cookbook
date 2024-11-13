@@ -1,0 +1,21 @@
+<!-- When we want to completely change the functionality of the controller -->
+<apex:page controller="MyCustomController">
+
+    <!-- Calling the Name string from MyCustomController -->
+    <apex:form >
+        <apex:outputLabel >{!name}</apex:outputLabel>
+    </apex:form>
+
+    <!-- Iterating through the returned Contacts from the Custom Controller -->
+    <apex:form >
+        <apex:pageBlock title="Contacts List" id="contact_table">
+            <apex:pageBlockTable value="{!contactList}" var="contactRecord">
+                <apex:column value="{!contactRecord.Name}" />
+                <apex:column value="{!contactRecord.Title}" />
+                <apex:column value="{!contactRecord.Email}" />
+                <apex:column value="{!contactRecord.Phone}" />
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+
+</apex:page>

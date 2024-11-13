@@ -1,0 +1,25 @@
+<!-- Showcasing action methods such as filtering a list  -->
+<apex:page controller="ContactListController">
+    <apex:form >
+        <apex:pageBlock title="Contacts List" id="contact_table">
+            <apex:pageBlockTable value="{!contactList}" var="contactRecord">
+                <apex:column value="{!contactRecord.Name }" />
+                <apex:column value="{!contactRecord.Title }" />
+                <apex:column value="{!contactRecord.Email }" />
+            </apex:pageBlockTable>
+            <!-- This creates a buttons section  -->
+            <apex:pageBlockButtons >
+                <!-- This button is paired with our showCFOS method which filters the exisitng SOQL query  -->
+                <apex:commandButton action="{!showCFOS}"
+                    value="CFOs Only"
+                    reRender="contact_table"
+                />
+                <!-- This button clears the filter from above  -->
+                <apex:commandButton action="{!showAllContacts}"
+                    value="Show All Contacts"
+                    reRender="contact_table"
+                />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

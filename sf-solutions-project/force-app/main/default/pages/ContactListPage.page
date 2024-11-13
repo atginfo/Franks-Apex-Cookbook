@@ -1,0 +1,14 @@
+<!-- Using standard List controller it iterate over generic list of sObjects
+Make sure to use recordSetVar and set that to a variable name -->
+<apex:page standardController="Contact" recordSetVar="contactList">
+
+    <!-- Then we can set our pageBlockTable to contactList and var as contact -->
+    <apex:pageBlock title="Contacts">
+        <apex:pageBlockTable value="{!contactList}" var="contact">
+            <apex:column value="{!contact.Name}" />
+            <apex:column value="{!contact.Title}" />
+            <apex:column value="{!contact.Phone}" />
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    
+</apex:page>
