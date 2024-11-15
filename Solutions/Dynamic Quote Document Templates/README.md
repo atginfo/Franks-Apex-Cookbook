@@ -153,7 +153,71 @@ Along with setting the column widths, we also need to conditionally render our t
 ```
 
 ### Dynamic Quote Header
+(More to come soon!)
 
 ## Supported Visualforce tags
+Visualforce pages used in Output Document Template Content are unique in that only specific tags and attributes are supported. If a tag or attribute is not supported then when generating a document, you will recieve the dreaded ```Error generating document: Bad Request``` error message. Most basic HTML and some Apex tags won't be supported as well as the style tag and any CSS.
+
+Another limitation is the inability to have fonts of differing weights on the same line. For example, we wouldn't be able to have bold text and regular text on the same line. They would need to be separated within two block tags or potentially done in a hacky way using tables with invisible borders and meticulous text alignment.
+
+During my experimenting I have a list of supported and unsupported tags that I've come across with many more to explore and test.
+
+### Supported
+1. block-container
+2. block
+   - font-weight
+   - font-size
+   - font-family
+   - background-color
+   - text-align
+   - padding
+   - margin-left
+   - margin-right
+3. table
+   - width
+4. table-column
+   - column-width         
+5. table-header
+6. table-body
+7. table-row
+   - font-weight
+   - background-color
+8. table-cell
+   - padding
+   - border-style (applies to all sides)
+   - border-top-style
+   - border-bottom-style
+   - border-right-style
+   - border-left-style
+   - border-width (applies to all sides)
+   - border-top-width
+   - border-bottom-width
+   - border-right-width
+   - border-left-width
+   - text-align
+9. apex:repeat
+10. apex:outputText
+11. apex:param
+12. ```&nbsp;``` when wrapped in a block 
+
+
+### Unsupported
+1. Most common HTML tags
+   - div
+   - p
+   - b (and any other font-weight tags)
+   - h1 (and all other header tags)
+   - a
+   - span
+2. style (including any CSS inline, internal or external)
+3. br
+4. apex:outputPanel
+
+If you encounter any new tags or attributes that are supported/ not supported feel free to reach out to me at frank.berni@cognizant.com and I will update the lists accordingly.
 
 ## General Troubleshooting
+Typically when generating a preview of a document the error message will either be clear or not depending on the error. 
+
+The message is typically clear when displaying an Apex issue. Any common exceptions being thrown like a List out of bounds or a variable cannot be reached can be easily pinpointed within the code. We can also have the Developer Console open whenever we generate the document to see any logs that populate.
+
+When the message states ```Error generating document: Bad Request``` is when it isn't so clear. This is when trial and error needs to be done to exactly pinpoint what is going wrong. When expanding upon the code, keep track of the list of supported and unsupported tags. If at one point the doc was generating fine but after a few changes it isn't, then rolling back changes one at a time and previewing again can help discover what parts aren't working. This type of tool is very restricting but with a little creative thinking, solutions are possible with the right tags and attributes!
