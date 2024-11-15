@@ -15,17 +15,12 @@ public with sharing class DynamicQuoteLineController {
     public Map<String, GroupedLines> groupToLineItemsMap{get;set;}
 
     // Visibility Controller - boolean getter setter 
+    // DEV EDIT: Add more booleans depending on use case for template
     public boolean showDiscount {get;set;}
 
     // Width settings for columns
-    // public string productCodeWidth {get;set;}
-    // public string productNameWidth {get;set;}
-    // public string quantityWidth {get;set;}
-    // public string listPriceWidth {get;set;}
+    // DEV EDIT: Feel free to add more or all column widths here to conditionally control size of columns
     public string addtlDiscWidth {get;set;}
-    // public string addtlDiscPercentWidth {get;set;}
-    // public string netPriceWidth {get;set;}
-    // public string netTotalWidth {get;set;}
     
 
     
@@ -41,11 +36,12 @@ public with sharing class DynamicQuoteLineController {
       }
     
     public DynamicQuoteLineController() {
+        // Set our quote Id and template Id
         quoteId = ApexPages.currentPage().getParameters().get('qid');
         templateId = ApexPages.currentPage().getParameters().get('tid');
 
+        // Default our class variables
         showDiscount = false;
-
         groupToLineItemsMap = new Map<String, GroupedLines>();
 
         // Query our template fields for styling
@@ -138,24 +134,18 @@ public with sharing class DynamicQuoteLineController {
             );
         }
 
+        // Setting class collection for table
         groupToLineItemsMap = tempGroupedLinesMap;
 
 
     }
 
+    // DEV EDIT: Feel free to add more or all column widths here to conditionally control size of columns
     // variables to set for table-column widths
     public void setColumnWidths() { 
         
-        // Set as default when all columns are shown
-        // productCodeWidth = 'auto';
-        // productNameWidth = 'auto';
-        // quantityWidth = 'auto';
-        // listPriceWidth = 'auto';
         // Ternary to set column-width to 0% if the boolean is false
         addtlDiscWidth = this.showDiscount ? 'auto' : '0%';
-        // addtlDiscPercentWidth = this.showDiscount ? 'auto' : '0%';
-        // netPriceWidth = 'auto';
-        // netTotalWidth = 'auto';
     
       }
 
