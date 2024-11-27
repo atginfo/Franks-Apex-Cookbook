@@ -153,7 +153,130 @@ Along with setting the column widths, we also need to conditionally render our t
 ```
 
 ### Dynamic Quote Header
-(More to come soon!)
+Similarly to the Quote Lines section, this template section is meant to dynamically render specific values based on some of the Quote's field values. This section uses tables with invisible borders to display text horizontally similarly to using a ```div``` with ```slds-grid```. Since most HTML tags are not supported, we'll have to get creative in how we display the text the right way.
+
+Our controller will be more simple since we are only querying specific fields from SBQQ__Quote__c and SBQQ__QuoteTemplate__c. The ```populateQuoteData()``` will additionally set our ```showOpportunity``` and ```showShipping``` booleans according to the value of the SBQQ__Opportunity2__c and SBQQ__ShippingStreet__c respectively.
+
+```
+public void populateTemplate() {
+    template = [
+        SELECT Id, SBQQ__FontFamily__c, SBQQ__FontSize__c, SBQQ__ShadingColor__c, 
+                SBQQ__CompanyName__c, SBQQ__CompanyPhone__c 
+        FROM SBQQ__QuoteTemplate__c 
+        WHERE Id = :templateId
+    ];
+}
+
+ public void populateQuoteData() {
+    quote = [
+        SELECT Id, Name, SBQQ__BillingName__c, SBQQ__BillingStreet__c, SBQQ__BillingCity__c, SBQQ__BillingState__c,
+                SBQQ__BillingPostalCode__c, SBQQ__BillingCountry__c, SBQQ__ShippingStreet__c, SBQQ__ShippingCity__c, SBQQ__ShippingState__c,
+                SBQQ__ShippingPostalCode__c, SBQQ__ShippingCountry__c, SBQQ__PrimaryContact__r.Name, SBQQ__PrimaryContact__r.Email,
+                SBQQ__PrimaryContact__r.Phone, Primary_Sales_Contact__r.Name, Primary_Sales_Contact__r.Email, SBQQ__Opportunity2__c, SBQQ__Opportunity2__r.Name
+        FROM SBQQ__Quote__c 
+        WHERE Id = :quoteId 
+        LIMIT 1
+    ];
+
+    // Check that Quote has an Opportunity for showOpportunity
+    showOpportunity = quote.SBQQ__Opportunity2__c != null ? true : false;
+    // Check Shipping Street is not null for showShipping
+    showShipping = quote.SBQQ__ShippingStreet__c != null ? true : false;
+    
+}
+```
+In the first section of our template we have a conditional render of the Opportunity Name using a mixture of bold and regular text. Since ```<b>``` tags and CSS are not supported, we have to format the columns in a seamless way using tables.
+We first set up our ```table``` tag with 100% width and then build the ```table-column``` tags. We want the text to read <b>Proposal Opportunity:</b> Opportunity Name so the first column's ```column-width``` will be set to exactly how big the text will be in combination with its font-size (12px). The second column will be set to ```auto``` so it can ajusts itself accordingly; we don't want any text to wrap into a new line.
+Next, we skip to the ```table-body``` since ```table-header``` is not required  and build the ```table-row``` and ```table-cell``` tags. We want our ```table-cell``` tags to have ```border-style="none"``` and ```border-width="0px"``` to hide that it is actually a table. We remove all padding from both tags except for ```padding-left='5px'``` on the first ```table-cell``` so the text can line up with the rest of the sections but keep the text on the right as close as possible.
+Lastly, we use ```<apex:outputText>``` wrapped by ```block``` tags so we can use the ```rendered``` attribute and assign the ```showOpportunity```. So now, if an Opportunity is assigned to the Quote, it will display this optional section.
+Keep in mind, the settings here are solely for one line of text with some bold and some regular text. Depending on the use case, the widths and columns will have to be adjusted accordinly.
+```
+<block-container>
+    <block font-size="12px" font-family="{!template.SBQQ__FontFamily__c}" >
+        <table width="100%" border-style="none" border-width="0px" >
+            <!-- Proposal Opportunity: column (size needs to be as tight as possible without causing text to wrap to another line) -->
+            <table-column column-width="25%"/>
+            <!-- Value for Opportunity Name (size can be as larger as it needs with auto) -->
+            <table-column column-width="auto"/>
+        
+            <!-- No header row needed, only table body  -->
+            <table-body>
+                <!-- Leave border-style none and border width 0px to eliminate table look -->
+                <table-row>
+                    <!-- left side - we keep padding on left side only to keep consistent with next table -->
+                    <table-cell padding-left='5px' border-style="none" border-width="0px" text-align="left">
+                        <!-- rendered tag set to showOpportunity to conditionally render both table cells -->
+                        <block font-weight="bold"><apex:outputText rendered="{!showOpportunity}" value="Proposal Opportunity:"/></block>
+                    </table-cell>
+                    <!-- right side - keep text align left but remove any padding so it is as close to the left margin -->
+                    <table-cell border-style="none" border-width="0px" text-align="left" >
+                        <block><apex:outputText rendered="{!showOpportunity}" value="{!quote.SBQQ__Opportunity2__r.Name}"/></block>
+                    </table-cell>
+                </table-row>
+            </table-body>
+
+        </table>
+    </block>
+</block-container>
+```
+In the second block for our Visualforce page is where are storing the traditional header displaying some Quote and Template fields relevant to this section. We are displaying it in a 3 column structure: Prepared For, Prepared By and Billing Information. We hide all borders to give the illusion that text is free standing both vertically and horiziontally.
+For this ```<block>``` tag we set our ```font-size``` to ```10px``` to have it larger than the Quote Lines section. Then the widths for the columns are set statically to space out how we want the text displayed. Note if going for a two column approach, the widths will need to be adjusted accordingly.
+```
+<block-container>
+    <!-- Normal Header table with text displayed horizontally - conditionally displays Shipping Information -->
+    <block font-size="10px" font-family="{!template.SBQQ__FontFamily__c}" >
+        <table width="100%" border-style="none" border-width="0px" >
+            <!-- Prepared for -->
+            <table-column column-width="40%"/>
+            <!-- Prepared by -->
+            <table-column column-width="35%"/>
+            <!-- Bill/Ship Addresses -->
+            <table-column column-width="35%"/>
+```
+When building the ```<table-body>``` and ```<table-row>```, we only use ```<table-cell>``` for each horiztonal section we want to add text to and ```<block``` tags for every line break we want to store text insides. This effectively gives us a one-row table that will store all our header values.
+We use ```font-weight="bold"``` on the top most text to label that column as well as the Shipping Information: portion to add additional styling to the header. 
+Lastly, ```<apex:outputText>``` so we can used the ```rendered``` attribute for the shipping information, in case the Quote has Shipping Information.
+```
+<!-- We use a table to allow text to display horiztonal across the page-->
+<table-body>
+    <table-row>
+        <!-- left side - no borders to hide that its actually a table -->
+        <table-cell padding="5px" border-style="none" border-width="0px" text-align="left">
+            <!-- font-weight bold is used on block tags -->
+            <block font-weight="bold">Prepared By:</block>
+            <block><apex:outputText value="{!quote.SBQQ__BillingName__c}"/></block>
+            <block><apex:outputText value="{!quote.SBQQ__PrimaryContact__r.Name}"/></block>
+            <block><apex:outputText value="{!quote.SBQQ__PrimaryContact__r.Email}"/></block>
+            <block><apex:outputText value="{!quote.SBQQ__PrimaryContact__r.Phone}"/></block>
+        </table-cell>
+
+        <!-- Middle column -->
+        <table-cell padding="5px" border-style="none" border-width="0px" text-align="left">
+            <block font-weight="bold">Prepared For:</block>
+            <block><apex:outputText value="{!template.SBQQ__CompanyName__c}"/></block>
+            <block><apex:outputText value="{!quote.Primary_Sales_Contact__r.Name}"/></block>
+            <block><apex:outputText value="{!quote.Primary_Sales_Contact__r.Email}"/></block>
+            <block><apex:outputText value="{!template.SBQQ__CompanyPhone__c}"/></block>
+        </table-cell>
+
+        <!-- Right side -->
+        <table-cell padding="5px" border-style="none" border-width="0px" text-align="left">
+            <block font-weight="bold">Billing Information:</block>
+            <block><apex:outputText value="{!quote.SBQQ__BillingStreet__c}"/></block>
+            <block>
+                <apex:outputText value="{!quote.SBQQ__BillingCity__c}, {!quote.SBQQ__BillingState__c}, {!quote.SBQQ__BillingCountry__c}, {!quote.SBQQ__BillingPostalCode__c}"/>
+            </block>
+            <block font-weight="bold"><apex:outputText rendered="{!showShipping}" value="Shipping Information:"/></block>
+            <block><apex:outputText rendered="{!showShipping}" value="{!quote.SBQQ__ShippingStreet__c}"/></block>
+            <block>
+                <apex:outputText rendered="{!showShipping}" 
+                    value="{!quote.SBQQ__ShippingCity__c}, {!quote.SBQQ__ShippingState__c}, {!quote.SBQQ__ShippingCountry__c}, {!quote.SBQQ__ShippingPostalCode__c}"/>
+            </block>
+        </table-cell>
+
+    </table-row>
+</table-body>
+```
 
 ## Supported Visualforce tags
 Visualforce pages used in Output Document Template Content are unique in that only specific tags and attributes are supported. If a tag or attribute is not supported then when generating a document, you will recieve the dreaded ```Error generating document: Bad Request``` error message. Most basic HTML and some Apex tags won't be supported as well as the style tag and any CSS.
