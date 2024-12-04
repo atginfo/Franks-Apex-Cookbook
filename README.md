@@ -6,7 +6,7 @@ During my project work I have worked with Salesforce CPQ to customize different 
 Thank you and Happy Coding!
 
 ## Work includes:
-- Custom Dyamic Templates for Quote Documents (WIP)
+- Custom Dyamic Templates for Quote Documents
 - Custom Product Selection process for QLE (WIP)
 - Ability to export Quote Lines for any Quote (WIP)
 - Ability to override default Add Products page for Opportunity (WIP)
