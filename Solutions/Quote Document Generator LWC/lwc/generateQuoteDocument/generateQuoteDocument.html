@@ -1,0 +1,70 @@
+<!-- 
+    Author: Frank Berni
+    Purpose: 
+    Facilitates ability to preview and generate Quote Documents while on Quote Record Page layout
+-->
+<template>
+    <lightning-card>
+        <!-- Title for card -->
+        <div slot="title">
+            <div class="slds-grid slds-grid_vertical-align-center">
+                <div class="slds-col">
+                    <h2 class="slds-card__header-title" style="text-indent: 20px;">Generate Quote Document</h2>
+                </div>
+                <div class="slds-col slds-text-align_right">
+                </div>
+            </div>
+        </div>
+        <div class="slds-m-around_medium">
+            <!-- Quote Name - defaulted value is Quote_Name_Override__c but can be edited -->
+            <lightning-input
+                type="text"
+                label="Document Name"
+                value={documentName}
+                onchange={handleDocumentNameChange}
+                class="slds-m-bottom_small"
+                message-when-value-missing="Document Name is required"
+                required
+            ></lightning-input>
+
+            <!-- Dropdown box to select which template to use, defaults to first template returned -->
+            <lightning-combobox
+                name="template"
+                label="Template"
+                value={selectedTemplateId}
+                placeholder="Select a template"
+                options={templateOptions}
+                onchange={handleTemplateChange}
+                class="slds-m-bottom_small"
+            ></lightning-combobox>
+            
+            <!-- Centering buttons -->
+            <div slot="footer" class="slds-grid slds-grid_align-center slds-m-top-top_medium">
+                <!-- Adding Preview Proposal button - directs user to preview page for template -->
+                <lightning-button 
+                    label="Preview" 
+                    onclick={handlePreviewDocument} 
+                    variant="neutral"   
+                    disabled={isLoading}       
+                ></lightning-button>
+                
+                <!-- Save Proposal button - saves Document to Quote's Notes & Attachments -->
+                <lightning-button 
+                    label="Generate" 
+                    onclick={handleGenerateDocument} 
+                    variant="brand"
+                    disabled={isGenerateDisabled}   
+                    class="slds-m-left_small"      
+                ></lightning-button>           
+            </div>
+            
+            <!-- Conditional render spinner with loading text -->
+            <template lwc:if={isLoading}>
+                <div class="slds-m-top_small">
+                    <lightning-spinner alternative-text="Generating document..." size="small"></lightning-spinner>
+                    <p aria-live="polite">Generating document... This may take a few moments.</p>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
