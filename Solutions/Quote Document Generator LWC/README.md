@@ -8,7 +8,7 @@ This setup enables users to select a deployed template, enter a document name, a
 
 This README is intended as a supplemental guide for developers looking to customize the quote document generation flow, whether to integrate it into a guided experience or improve document UX for sales teams.
 
-![Screenshot](Solutions/Quote Document Generator LWC/images/quote-doc-generator-screenshot.png)
+![Screenshot](https://github.com/atginfo/Franks-Apex-Cookbook/blob/main/Solutions/Quote%20Document%20Generator%20LWC/images/quote-doc-generator-screenshot.png)
 
 ## Features
 
