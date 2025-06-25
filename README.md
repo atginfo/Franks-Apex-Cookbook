@@ -7,6 +7,7 @@ Thank you and Happy Coding!
 
 ## Work includes:
 - Custom Dyamic Templates for Quote Documents
+- Generate Quote Documents on Quote Record Page
 - Custom Product Selection process for QLE (WIP)
 - Ability to export Quote Lines for any Quote (WIP)
 - Ability to override default Add Products page for Opportunity (WIP)
