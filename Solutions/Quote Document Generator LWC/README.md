@@ -8,7 +8,7 @@ This setup enables users to select a deployed template, enter a document name, a
 
 This README is intended as a supplemental guide for developers looking to customize the quote document generation flow, whether to integrate it into a guided experience or improve document UX for sales teams.
 
-|Insert Image Here|
+![Screenshot](Solutions/Quote Document Generator LWC/images/quote-doc-generator-screenshot.png)
 
 ## Features
 
@@ -53,7 +53,7 @@ Validation:
 
 ## Document Generation Flow
 
-1. User lands on Quote Record Page with the LWC placed on layout or launched via a Quick Action.
+1. User lands on Quote Record Page with the LWC placed on layout
 2. LWC fetches deployed templates and quote name using getTemplatesAndQuoteInfo.
 3. User previews or generates document using UI controls.
 4. On generate:
