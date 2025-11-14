@@ -1,6 +1,8 @@
 # Salesforce ↔ Postman Mock Integration
 
 A lightweight example demonstrating how to connect Salesforce Apex to a Postman Mock Server using Named Credentials and External Credentials.  
+This solution is written for Accounts but can easily be expanded upon to include other Salesforce objects.
+Postman is used for the mock server however this can easily work with other external servers such as Netsuite. Named Credentials would have to be updated to the corresponding site.
 This guide is written for developers experienced in Apex but newer to Postman's mock server features.
 
 ---
@@ -24,7 +26,7 @@ This project shows how to:
 
 1. In Postman, go to **Mock Servers → Create Mock Server**
 2. Configure:
-   - Name: `Account Sync FCB`
+   - Name: `Account Sync` or name of choice
    - Collection: your chosen collection (or create a new one)
    - Environment: none
    - Simulated Delay: none
@@ -52,7 +54,7 @@ Set the request body to:
 raw → JSON
 ```
 
-Example payload:
+Example payload (In this repository under Scripts\postman\accounts-sync-body.json can be copy/pasted here):
 
 ```json
 {
@@ -71,6 +73,7 @@ Save your request.
 1. Send the request once  
 2. In the returned response → click **Save Response → Save as example**  
 3. Replace the example response body with:
+(In this repository under Scripts\postman\accounts-sync-response-body.json can be copy/pasted here):
 
 ```json
 {
@@ -110,6 +113,7 @@ To authorize the private mock server:
 | Sync Account  | Sync_Account__c   | Checkbox | User selects this to initiate syncing   |
 | Sync Id       | Sync_Id__c        | Text     | Stores the GUID returned from Postman   |
 
+In this repository under Objects\Account\fields, you can also deploy these two fields via Visual Studio SFDX. If creating these fields for other SObjects, follow the format above and rename them according to your business need.
 ---
 
 ## 2.2 Create the External Credential
@@ -164,6 +168,8 @@ This integration includes:
 
 ## 3.1 IntegrationCalloutService.cls
 
+The payload primarily builds basic OOTB fields but can be expanded upon as well as having different payloads built for other SObjects and endpoints.
+
 ```apex
 public class IntegrationCalloutService {
 
@@ -208,6 +214,8 @@ public class IntegrationCalloutService {
 ---
 
 ## 3.2 IntegrationCalloutJob.cls
+
+Depending on the server's endpoints and the type of sObject you wish to write to, this can serve as a template to expanded upon.
 
 ```apex
 public class IntegrationCalloutJob implements Queueable, Database.AllowsCallouts {
@@ -264,6 +272,8 @@ public class IntegrationCalloutJob implements Queueable, Database.AllowsCallouts
 
 ## 3.3 AccountTriggerForCallouts.trigger
 
+The body for this trigger can be transferred to an existing Account trigger or switched for another SObject Trigger
+
 ```apex
 trigger AccountTriggerForCallouts on Account (after insert, after update) {
 
@@ -292,7 +302,7 @@ trigger AccountTriggerForCallouts on Account (after insert, after update) {
 
 # 4. End-to-End Workflow
 
-1. User checks the **Sync Account** checkbox on an Account  
+1. User checks the **Sync Account** checkbox on an existing or new Account and saves   
 2. Trigger detects the change and calls the service  
 3. Apex builds a JSON payload  
 4. Payload is sent by a Queueable to the Named Credential:  
