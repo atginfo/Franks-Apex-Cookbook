@@ -1,0 +1,194 @@
+<!-- 
+    Author: Frank Berni
+    Purpose:
+    To be used as TemplateContent for a TemplateSection
+    Displays all Quote lines as displayed in a standard QLE
+    Conditionally renders Additional Discounts if applied to any Quote Lines
+    Ability to display individual line items in tables by group
+-->
+<apex:page contentType="text/xml" showHeader="false" sidebar="false" controller="DynamicQuoteLineController">
+    <block-container>
+
+        <!-- Title -->
+        <block text-align="center"> Quote Lines </block>
+
+        <!-- Spacing between title and table -->
+        <block>&nbsp;</block>
+
+        <block font-size="{!template.SBQQ__FontSize__c}" font-family="{!template.SBQQ__FontFamily__c}" >
+            <!-- 1st apex:repeat, loop through keySet of each Quote Line Group -->
+            <apex:repeat id="grouprepeat" value="{!groupToLineItemsMap}" var="g">
+
+                <!-- Group Title/ Displays Quote Number if No ql groups exist -->
+                <block text-align="left" font-size="10px" padding="3px">{!g}</block> 
+
+                <!-- Create a new table for each Quote Line Group - with all borders, bold and shaded top and bottom rows -->
+                <table width="100%">
+
+                    <!-- Setting columns - Very important when building tables -->
+                    <!-- Code -->
+                    <table-column column-width="35%"/> 
+                    <!-- Name -->
+                    <table-column column-width="auto"/>
+                    <!-- Quantity -->
+                    <table-column column-width="auto"/>
+                    <!-- List Price -->
+                    <table-column column-width="auto"/>
+                    <!-- Addtl Discount Amount - conditional -->
+                    <table-column column-width="{!addtlDiscWidth}"/>
+                    <!-- Addtl Discount Percent - conditional -->
+                    <table-column column-width="{!addtlDiscWidth}"/>
+                    <!-- Net Price -->
+                    <table-column column-width="auto"/>
+                    <!-- Net Total -->
+                    <table-column column-width="auto"/>
+
+                    <!-- Header row (optional but recommended)-->
+                    <table-header>
+                        <!-- Add bold text and shading -->
+                        <table-row font-weight="bold" background-color="#{!template.SBQQ__ShadingColor__c}">
+                            <!-- table-cells can have styling applied by specific attributes -->
+                            <table-cell padding="3px" border-style="solid" border-width="1px" text-align="center">
+                                <!-- block tags act as divs and can be further styled -->
+                                <block>Product Code</block> 
+                            </table-cell>
+                            <table-cell padding="3px" border-style="solid" border-width="1px" text-align="center">
+                                <block>Product Name</block> 
+                            </table-cell>
+                            <table-cell padding="3px" border-style="solid" border-width="1px" text-align="center">
+                                <block>Quantity</block> 
+                            </table-cell>
+                            <table-cell padding="3px" border-style="solid" border-width="1px" text-align="center">
+                                <block>List Price</block> 
+                            </table-cell>
+                            <!-- Conditional column : Additional Discount Amount -->
+                            <table-cell padding="3px" border-style="solid" border-width="1px" text-align="center">
+                                <!-- We use apex:outputText for its rendered attribute, we then need to wrap it in block tags -->
+                                <block><apex:outputText value="Additional Disc ($)" rendered="{!showDiscount}"/></block> 
+                            </table-cell>
+                            <!-- Conditional column : Additional Discount Discount -->
+                            <table-cell padding="3px" border-style="solid" border-width="1px" text-align="center">
+                                <block><apex:outputText value="Additional Disc (%)" rendered="{!showDiscount}"/></block>
+                            </table-cell>
+                            <table-cell padding="3px" border-style="solid" border-width="1px" text-align="center">
+                                <block>Net Price</block> 
+                            </table-cell>
+                            <table-cell padding="3px" border-style="solid" border-width="1px" text-align="center">
+                                <block>Net Total</block> 
+                            </table-cell>
+                        </table-row>
+                    </table-header>
+
+                    <!-- required for table and output doc to generate -->
+                    <table-body>
+                        <!-- 2nd apex:repeat, looping through the associated line items for each Quote Line Group -->
+                        <apex:repeat id="linesrepeat" value="{!groupToLineItemsMap[g].lines}" var="line">
+                            <table-row keep-together.within-page="always">
+                                <!-- Matching padding, border style, and border width, aligning text to right instead -->
+                                <table-cell padding="3px" border-style="solid" border-width="1px" text-align="left">
+                                    <block>{!line.SBQQ__ProductCode__c }</block> 
+                               </table-cell>
+                               <table-cell padding="3px" border-style="solid" border-width="1px" text-align="left">
+                                    <block>{!line.SBQQ__ProductName__c }</block> 
+                                </table-cell>
+                                <table-cell padding="3px" border-style="solid" border-width="1px" text-align="center">
+                                    <block>
+                                        <!-- to prevent numbers from looking like deciaml we format it as whole number -->
+                                        <apex:outputText value="{0,number,integer}">
+                                            <!-- apex:param to store the value of our field api -->
+                                            <apex:param value="{!line.SBQQ__Quantity__c}"/>
+                                        </apex:outputText>
+                                    </block>  
+                                </table-cell>
+                                <table-cell padding="3px" border-style="solid" border-width="1px" text-align="right">
+                                    <block>
+                                        <!-- Similar to number, currency doesn't display properly, so we need to ensure proper currency format -->
+                                        <apex:outputText value="{0,number,currency}">
+                                            <apex:param value="{!line.SBQQ__ListPrice__c}"/>
+                                        </apex:outputText>
+                                    </block>
+                                </table-cell>
+                                <table-cell padding="3px" border-style="solid" border-width="1px" text-align="right">
+                                    <block>
+                                        <!-- Conditional render value for Discount Amount, and ensure proper currency format -->
+                                        <apex:outputText value="{0,number,currency}" rendered="{!showDiscount}">
+                                            <apex:param value="{!line.SBQQ__AdditionalDiscountAmount__c}"/>
+                                        </apex:outputText>
+                                    </block>
+                                </table-cell>
+                                <table-cell padding="3px" border-style="solid" border-width="1px" text-align="right">
+                                    <block>
+                                        <!-- Conditional render value for Discount Percent, and ensure proper currency format -->
+                                      <apex:outputText value="{0,number,##.##%}" rendered="{!showDiscount}">
+                                        <!-- Dividing by 100 to display true percentage value -->
+                                        <apex:param value="{!line.SBQQ__Discount__c / 100}"/>
+                                      </apex:outputText>
+                                    </block>
+                                </table-cell>
+                                <table-cell padding="3px" border-style="solid" border-width="1px" text-align="right">
+                                    <block>
+                                        <apex:outputText value="{0,number,currency}">
+                                            <apex:param value="{!line.SBQQ__NetPrice__c}"/>
+                                        </apex:outputText>
+                                    </block>
+                                </table-cell>
+                                <table-cell padding="3px" border-style="solid" border-width="1px" text-align="right">
+                                    <block>
+                                        <apex:outputText value="{0,number,currency}">
+                                            <apex:param value="{!line.SBQQ__NetTotal__c}"/>
+                                        </apex:outputText>
+                                    </block>
+                                </table-cell>
+
+                            </table-row>
+                        </apex:repeat>
+
+                        <!-- Optional Final Row for Subtotal per Group, bold text and shaded background -->
+                        <table-row keep-together.within-page="always" font-weight="bold" background-color="#{!template.SBQQ__ShadingColor__c}">
+                            <!-- Label for row -->
+                            <table-cell padding="3px" border-style="solid" border-width="1px" text-align="right">
+                                <block>{!g} - Subtotal:</block> 
+                            </table-cell>
+                             <!-- Blank cells since only Product Name and Net Total columns will have data -->
+                             <table-cell padding="3px" border-style="solid" border-width="1px" text-align="left">
+                                <!-- Without these empty blocks the document won't generate -->
+                                <block></block>
+                            </table-cell> 
+                            <table-cell padding="3px" border-style="solid" border-width="1px" text-align="left">
+                                <block></block>
+                            </table-cell> 
+                            <table-cell padding="3px" border-style="solid" border-width="1px" text-align="left">
+                                <block></block>
+                            </table-cell> 
+                            <table-cell padding="3px" border-style="solid" border-width="1px" text-align="left">
+                                <block></block>
+                            </table-cell> 
+                            <table-cell padding="3px" border-style="solid" border-width="1px" text-align="left">
+                                <block></block>
+                            </table-cell> 
+                            <table-cell padding="3px" border-style="solid" border-width="1px" text-align="left">
+                                <block></block>
+                            </table-cell> 
+                            <!-- Net Total Amount Sum -->
+                            <table-cell padding="3px" border-style="solid" border-width="1px" text-align="right">
+                                <block>
+                                    <apex:outputText value="{0,number,currency}">
+                                        <apex:param value="{!groupToLineItemsMap[g].netTotalSum}"/>
+                                    </apex:outputText>
+                                </block> 
+                            </table-cell>
+
+                        </table-row>
+                    </table-body>
+
+                </table>
+
+                <!-- 2 extra spaces before the next table -->
+                <block>&nbsp;</block>
+                <block>&nbsp;</block>
+
+            </apex:repeat>
+        </block>
+
+    </block-container>
+</apex:page>
