@@ -1,8 +1,10 @@
 # Salesforce ↔ Postman Mock Integration
 
 A lightweight example demonstrating how to connect Salesforce Apex to a Postman Mock Server using Named Credentials and External Credentials.  
+
 This solution is written for Accounts but can easily be expanded upon to include other Salesforce objects.
 Postman is used for the mock server however this can easily work with other external servers such as Netsuite. Named Credentials would have to be updated to the corresponding site.
+
 This guide is written for developers experienced in Apex but newer to Postman's mock server features.
 
 ---
@@ -54,7 +56,7 @@ Set the request body to:
 raw → JSON
 ```
 
-Example payload (In this repository under Scripts\postman\accounts-sync-body.json can be copy/pasted here):
+Example payload (In this repository under [Scripts\postman\accounts-sync-body.json](https://github.com/atginfo/Franks-Apex-Cookbook/blob/main/Solutions/Integration%20Callout%20with%20Triggers/scripts/postman/accounts-sync-body.json) can be copy/pasted here):
 
 ```json
 {
@@ -73,7 +75,9 @@ Save your request.
 1. Send the request once  
 2. In the returned response → click **Save Response → Save as example**  
 3. Replace the example response body with:
-(In this repository under Scripts\postman\accounts-sync-response-body.json can be copy/pasted here):
+(In this repository under [Scripts\postman\accounts-sync-response-body.json](https://github.com/atginfo/Franks-Apex-Cookbook/blob/main/Solutions/Integration%20Callout%20with%20Triggers/scripts/postman/accounts-sync-body-response.json) can be copy/pasted here):
+
+
 
 ```json
 {
@@ -113,7 +117,9 @@ To authorize the private mock server:
 | Sync Account  | Sync_Account__c   | Checkbox | User selects this to initiate syncing   |
 | Sync Id       | Sync_Id__c        | Text     | Stores the GUID returned from Postman   |
 
-In this repository under Objects\Account\fields, you can also deploy these two fields via Visual Studio SFDX. If creating these fields for other SObjects, follow the format above and rename them according to your business need.
+
+In this repository under [Objects\Account\fields](https://github.com/atginfo/Franks-Apex-Cookbook/tree/main/Solutions/Integration%20Callout%20with%20Triggers/objects/Account/fields), you can also deploy these two fields via Visual Studio SFDX. If creating these fields for other SObjects, follow the format above and rename them according to your business need.
+
 ---
 
 ## 2.2 Create the External Credential
