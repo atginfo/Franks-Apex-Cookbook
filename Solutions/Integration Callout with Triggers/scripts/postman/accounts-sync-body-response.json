@@ -1,0 +1,10 @@
+// @DEV-EDIT copy past below in an example response for your POST command in the 
+// Body tab where the Status Code is displayed
+// Ensure Content-Type is application/json; charset=utf-8 under Headers tab
+// The PostmanSyncId is randomly generated when sent to Postman and returned
+{
+  "synced": true,
+  "postmanSyncId": "{{$guid}}",
+  "receivedAt": "{{$isoTimestamp}}",
+  "example": "yes"
+}

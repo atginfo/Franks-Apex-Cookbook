@@ -1,0 +1,20 @@
+// @DEV-EDIT copy-paste below in Postman Collection's POST command under the body tab
+// i.e. Account Sync > POST accounts/sync
+// @DEV-EDIT ensure the Headers tab has the x-api-key for your specific Postman instance
+{
+  "Id": "001XXXXXXXXXXXXXXX",
+  "Name": "Acme, Inc.",
+  "ParentId": "001YYYYYYYYYYYYYYY",
+  "Phone": "555-555-1234",
+  "Fax": "555-555-5678",
+  "Website": "https://acme.com",
+  "BillingStreet": "123 Elm St",
+  "BillingCity": "Phoenix",
+  "BillingState": "AZ",
+  "BillingPostalCode": "85001",
+  "BillingCountry": "USA",
+  "Industry": "Manufacturing",
+  "OwnerName": "Jane Smith",
+  "OwnerEmail": "jsmith@acme.com",
+  "AccountNumber": "A-10234"
+}
